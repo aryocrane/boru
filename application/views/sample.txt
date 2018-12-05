@@ -1,0 +1,40 @@
+<div class="container-fluid">
+
+
+function get_sms_user($user)
+        {
+                //$user =  $this->input->post('user');
+                $this->db->order_by('id','desc');
+                $this->db->where('created_by',$user);
+                $this->db->where('bulk_id',0);
+                $this->db->limit(10);
+                $this->db->select('id ,to_msisdn, priority, type, content, status_sms, retry_id, sending_date, delivery_date, expired_date');
+                $r = $this->db->get($this->table);
+                $data['item']   = $r->result_array();
+                $data['title']  = array('Job ID','Destination','Priority', 'Type','Content','Status', 'RetryID', 'SendDate','DeliveryDate','ExpDate');
+                return $data;
+        }
+
+		
+		<table class="bordered">
+  <tr>
+                <?php foreach($records['title'] as $value):?>
+                <th><?php echo $value; ?></th>
+                <?php endforeach;?>
+        </tr>
+        <?php foreach($records['item'] as $key => $value): ?>
+                <?php foreach($value as $key_item => $item):?>
+                        <td nowrap><?php echo $item; ?></td>
+
+                <?php endforeach;?>
+        </tr>
+                <?php endforeach;?>
+  <tr>
+  <td colspan="9">Total SMS</td>
+  <td><?php echo count($records['item']);?></td>
+  </tr>
+</table>
+
+
+
+mysqlimport  --ignore-lines=1 --fields-terminated-by=, --columns='site,startdate,starttime,finishdate,finishtime,startcount,endcount,grossdeliver,avgflow,param1,salenumber,meter_number,unitid' --local -u root -p postenergy
